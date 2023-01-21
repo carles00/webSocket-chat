@@ -1,33 +1,35 @@
 let myChat = {
-    textInput: document.getElementById("input-text"),
-    sendButton: document.getElementById("send-text"),
-    messageContainer: document.getElementById("message-board"),
+    textInput: null,
+    sendButton: null,
+    messageContainer: null,
 
     init: function () {
-        this.sendButton.addEventListener("click", () =>{
-            this.sendMessage();
-        });
-        this.textInput.addEventListener("keyup", (e) => {
+        myChat.textInput = document.getElementById("input-text");
+        myChat.sendButton = document.getElementById("send-text");
+        myChat.messageContainer = document.getElementById("message-board");
+
+        myChat.sendButton.addEventListener("click", myChat.sendMessage);
+        myChat.textInput.addEventListener("keyup", (e) => {
             if (e.code === "Enter") {
-                this.sendMessage();
+                myChat.sendMessage();
             }
         });
     },
 
     sendMessage: function () {
-        let message = this.textInput.value;
+        let message = myChat.textInput.value;
         if (message) {
             let msg = {
                 type: "text",
                 content: message,
                 username: ""
             }
-            this.appendMessageToBoard(msg);
+            myChat.appendMessageToBoard(msg);
         }
     },
 
     recieveMessage: function(msg){
-        
+
     },
 
     appendMessageToBoard: function(msg){
@@ -46,9 +48,9 @@ let myChat = {
         textDiv.className = "message-content";
         textDiv.innerText = msg.content;
         messageDiv.appendChild(textDiv);
-        this.messageContainer.prepend(messageDiv);  
-        this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
-        this.textInput.value = "";
+        myChat.messageContainer.prepend(messageDiv);  
+        myChat.messageContainer.scrollTop = myChat.messageContainer.scrollHeight;
+        myChat.textInput.value = "";
     }
 };
 
