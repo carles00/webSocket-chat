@@ -23,9 +23,11 @@ let myChat = {
                 username: ""
             }
             this.appendMessageToBoard(msg);
-            this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
-            this.textInput.value = "";
         }
+    },
+
+    recieveMessage: function(msg){
+        
     },
 
     appendMessageToBoard: function(msg){
@@ -44,8 +46,9 @@ let myChat = {
         textDiv.className = "message-content";
         textDiv.innerText = msg.content;
         messageDiv.appendChild(textDiv);
-
         this.messageContainer.prepend(messageDiv);  
+        this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
+        this.textInput.value = "";
     }
 };
 
