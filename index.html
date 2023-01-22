@@ -17,15 +17,20 @@
         <div id="main-container">
             
             <div id="user-name-container" class="grid-item">
-                <p id="user-name">User</p>
+                <input type="text" id="user-name-input" placeholder="Your Username">
             </div>
 
             <div id="navigation-container" class="grid-item">
-                <input type="text" id="roomCodeInput" placeholder="Enter Room Code"/>
+                <div id="room-connection">
+                    <input type="text" id="room-code-input" placeholder="Enter Room Code"/>
+                    <div id="connect-button">
+                        <span class="material-symbols-rounded">login</span>
+                    </div> 
+                </div>
             </div>
 
             <div id="chat-name-container" class="grid-item">
-                <p id="chat-name">Chat-Name</p>
+                <p id="chat-name"></p>
             </div>
         
             <div id="message-board" class="grid-item">

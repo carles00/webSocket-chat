@@ -34,6 +34,22 @@ html, body{
 
 }
 
+#user-name-input{
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #194654;
+    color: white;
+    font-size: 2.5em;
+    border: 0;
+}
+
+#user-name-input:focus{
+    outline: none;
+}
+#user-name-input:focus::placeholder{
+    color:transparent;
+}
+
 #navigation-container{
     grid-column: 1/4;
     grid-row: 2/13;
@@ -43,7 +59,16 @@ html, body{
     justify-content: center;
 }
 
-#roomCodeInput{
+#room-connection{
+    height: 7vh;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: #194654;
+    display: flex;
+    align-items: center;
+}
+
+#room-code-input{
     height: 5vh;
     width: 80%;
     padding: 10px;
@@ -53,11 +78,25 @@ html, body{
     border: 0;
 }
 
-#roomCodeInput:focus{
+#room-code-input:focus{
     outline: none;
 }
-#roomCodeInput:focus::placeholder{
+#room-code-input:focus::placeholder{
     color:transparent;
+}
+
+#connect-button{
+    width: 20%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #266B80;
+}
+
+#connect-button:hover{
+    background-color: #266B80;
+    color: #194654;
 }
 
 #chat-name-container{
