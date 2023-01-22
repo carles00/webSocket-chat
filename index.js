@@ -86,7 +86,7 @@ let myChat = {
                     userName: ""
                 }
 
-                myChat.server.sendMessage(JSON.stringify(msg));
+                myChat.server.sendMessage(JSON.stringify(msg),[id]);
             }
         });
     },
