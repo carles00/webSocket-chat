@@ -268,7 +268,7 @@ SillyClient.prototype.getBaseURL = function()
 	}
 	var index = url.indexOf("/");
 	var host = url.substr(0,index);
-	return protocol + host;
+	return protocol + host + '/node/9000/';
 }
 
 //To store temporal information in the server
