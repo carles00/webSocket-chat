@@ -10,5 +10,5 @@ Chat using SillyServer web socket library
 1. Enter your username on the top-left corner
 2. Enter Room code you want to connect to.
 3. Click on the login button
-
+4. To send private message, click on a message from the user you want to send the private message to
 

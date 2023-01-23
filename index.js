@@ -9,17 +9,21 @@ let myChat = {
     textInput: null,
     sendButton: null,
     messageContainer: null,
+    navigation: null,
 
     server: null,
     userName: null,
     userID: null,
     roomCode: null,
+    private: false,
+    sendTo: null,
 
     init: function () {
         this.userInput = document.getElementById("user-name-input");
         this.roomCodeInput = document.getElementById("room-code-input");
         this.connectButton = document.getElementById("connect-button");
         this.chatName = document.getElementById("chat-name");
+        this.navigation = document.getElementById("navigation-container");
 
         this.textInput = document.getElementById("input-text");
         this.sendButton = document.getElementById("send-text");
@@ -30,7 +34,8 @@ let myChat = {
                 this.roomCode = this.roomCodeInput.value
                 this.userName = this.userInput.value;
 
-                this.chatName.innerText = this.roomCodeInput.value;
+                this.chatName.innerText = this.roomCode;
+                this.createRoomInfo(this.roomCode);
                 this.connectToRoom();
             }
         });
@@ -73,7 +78,6 @@ let myChat = {
             content: `${id} connected`,
             username: ""
         }
-        console.log(id)
         myChat.appendSystemMessageToBoard(msg);
 
         //send log to connected user
@@ -102,52 +106,96 @@ let myChat = {
 
     onMessage: function(id, msg){
         let message = JSON.parse(msg);
+        //differentiate types of message
         if(message.type === "text"){
-            myChat.appendMessageToBoard(message);
+            myChat.appendMessageToBoard(id, message);
         }else if(message.type === "history"){
             let log = message.content;
             console.log(log);
             log.forEach(element => {
-                myChat.appendMessageToBoard(element);
+                if(element.type ==="text"){
+                    myChat.appendMessageToBoard(id,element);
+                }
             });
+        }else if(message.type === "private"){
+            myChat.appendMessageToBoard(id, message, true);
         }
         myChat.log.push(message);
     },
 
     sendMessage: function () {
+        let msgType = "text";
+        if(myChat.private){
+            msgType = "private"
+        }
         //create and send message to room
         let message = myChat.textInput.value;
         if (message) {
             let msg = {
-                type: "text",
+                type: msgType,
                 content: message,
                 username: myChat.userName
             }
-            myChat.appendMessageToBoard(msg);
+            myChat.appendMessageToBoard(myChat.userID ,msg);
             myChat.log.push(msg);
-            myChat.server.sendMessage(JSON.stringify(msg));
+            if(myChat.private){
+                myChat.server.sendMessage(JSON.stringify(msg),[myChat.sendTo]);
+                myChat.private = false;
+            }else{
+                myChat.server.sendMessage(JSON.stringify(msg));
+            }
         }
     },
 
-    appendMessageToBoard: function(msg){
+    appendMessageToBoard: function(id, msg, private=false){
         //create message div and append to message board
         let messageDiv = document.createElement("div");
         
         let classString = "message user-message"
+
+        //defferentiate between user message and contact message
         if(msg.username !== myChat.userName){
             classString = "message contact-message"
             let authorDiv = document.createElement("div");
             authorDiv.className = "message-author"
             authorDiv.innerText = msg.username;
+            messageDiv.setAttribute("user-id", id);
             messageDiv.appendChild(authorDiv);
+            
+            //listener for private messaging
+            messageDiv.addEventListener("click",function(){
+                //enable or disable private message
+                myChat.private = !myChat.private;
+                let sysText = `Sending private message to ${this.firstChild.innerText}`;
+                if(!myChat.private){
+                    sysText = "Canceled private Message";
+                }
+
+                myChat.sendTo = this.getAttribute("user-id");
+                let privateSys = {
+                    type: "text",
+                    content: sysText,
+                    username: ""
+                }
+                myChat.appendSystemMessageToBoard(privateSys);
+            });
+
         }
+        //change class if message is private
+        if(private){
+            classString = "message private-message"
+        }
+
+        //fill the divs
         messageDiv.className = classString;
         let textDiv = document.createElement("div");
         textDiv.className = "message-content";
         textDiv.innerText = msg.content;
         messageDiv.appendChild(textDiv);
-
-        this.messageContainer.prepend(messageDiv);  
+        
+        //use prepend because flex-direction is column-reverse
+        this.messageContainer.prepend(messageDiv);
+        //auto-scroll
         this.messageContainer.scrollTop = myChat.messageContainer.scrollHeight;
         this.textInput.value = "";
     },
@@ -166,6 +214,16 @@ let myChat = {
         this.messageContainer.prepend(messageDiv);  
         this.messageContainer.scrollTop = myChat.messageContainer.scrollHeight;
         this.textInput.value = "";
+    },
+
+    createRoomInfo: function(roomCode){
+        let roomInfoDiv = document.createElement("div");
+        roomInfoDiv.className = "room-info";
+        let codeP = document.createElement("p");
+        codeP.className = "room-code-info";
+        codeP.innerText = roomCode;
+        roomInfoDiv.appendChild(codeP);
+        myChat.navigation.appendChild(roomInfoDiv);
     }
 };
 

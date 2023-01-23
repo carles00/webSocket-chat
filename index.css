@@ -22,7 +22,7 @@ html, body{
     height : 100vh;
 	width : 100vw;
 }
-
+/* User Name zone*/
 #user-name-container{
     background-color: #194654;
     padding-left: 10px;
@@ -38,9 +38,13 @@ html, body{
     padding: 10px;
     border-radius: 10px;
     background-color: #194654;
-    color: white;
-    font-size: 2.5em;
+    color: rgb(225, 225, 225);
+    font-size: 2.5vw;
     border: 0;
+}
+
+#user-name-input::placeholder{
+    color: rgb(225, 225, 225);
 }
 
 #user-name-input:focus{
@@ -50,13 +54,14 @@ html, body{
     color:transparent;
 }
 
+/* Navigation Zone */
 #navigation-container{
     grid-column: 1/4;
     grid-row: 2/13;
     padding-top: 10px;
     background-color: #143742;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
 }
 
 #room-connection{
@@ -66,6 +71,7 @@ html, body{
     background-color: #194654;
     display: flex;
     align-items: center;
+    margin: 0px 10px 5px 10px;
 }
 
 #room-code-input{
@@ -74,8 +80,12 @@ html, body{
     padding: 10px;
     border-radius: 10px;
     background-color: #194654;
-    color: white;
+    color: rgb(225, 225, 225);
     border: 0;
+}
+
+#room-code-input::placeholder{
+    color: rgb(225, 225, 225);
 }
 
 #room-code-input:focus{
@@ -99,6 +109,23 @@ html, body{
     color: #194654;
 }
 
+.room-info{
+    margin: 5px 10px 5px 10px;
+    background-color: #0F2B33;
+    border-radius: 10px;
+    height: 3vh;
+    color: rgb(225, 225, 225);;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.room-info:hover{
+    background-color: #49CDF5;
+    color: black;
+}
+/* Chat Name Zone*/
+
 #chat-name-container{
     background-color: #194654;
     padding-left: 10px;
@@ -110,22 +137,14 @@ html, body{
     align-items: center;
 }
 
-#user-name{
-    color: white;
-    font-size: 2.5em;
-}
+
 
 #chat-name{
     color: white;
-    font-size: 2.5em;
+    font-size: 2.5vw;
 }
 
-#message-input-container{
-    grid-row: 2/11;
-    display: flex;
-    flex-direction: column;
-}
-
+/* message board zone */
 #message-board{
     grid-column: 4/13;
     grid-row: 2/12;
@@ -136,6 +155,56 @@ html, body{
     flex-direction: column-reverse;
     overflow-y: auto;
 }
+
+.message{
+    padding: 10px;
+    border-radius: 10px;
+    width: fit-content;
+    margin-bottom: 10px;
+    max-width: 55%;
+    word-wrap: break-word;
+    height: auto;
+}
+
+.user-message{
+    background-color: #49CDF5;
+    margin-left: auto;
+    margin-right: 20px;
+}
+
+.contact-message{
+    background-color: #266B80;
+    margin-left: 20px;
+    color: white;
+}
+
+.private-message{
+    background-color: aquamarine;
+    margin-left: 20px;
+}
+
+.message-author{
+    font-size: .8em;
+    color: #94cfdf;
+}
+
+.private-message > .message-author{
+    color: #0F2B33;
+}
+
+.sys-message{
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #194654;
+    color: white;
+    border-radius: 10px;
+}
+.sys-message-content{
+    font-size: .7em;
+}
+
+/* Message Input zone*/
 
 #text-space{
     grid-column: 4/13;
@@ -189,6 +258,7 @@ html, body{
     color: #143742;
 }
 
+/* icons */
 .material-symbols-rounded {
     font-variation-settings:
     'FILL' 0,
@@ -197,42 +267,5 @@ html, body{
     'opsz' 48
 }
 
-.message{
-    padding: 10px;
-    border-radius: 10px;
-    width: fit-content;
-    margin-bottom: 10px;
-    max-width: 55%;
-    word-wrap: break-word;
-    height: auto;
-}
 
-.user-message{
-    background-color: #49CDF5;
-    margin-left: auto;
-    margin-right: 20px;
-}
-
-.contact-message{
-    background-color: #266B80;
-    margin-left: 20px;
-    color: white;
-}
-
-.message-author{
-    font-size: .8em;
-    color: #94cfdf;
-}
-
-.sys-message{
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    background-color: #194654;
-    color: white;
-    border-radius: 10px;
-}
-.sys-message-content{
-    font-size: .7em;
-}
 
