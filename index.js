@@ -34,6 +34,8 @@ let myChat = {
                 this.roomCode = this.roomCodeInput.value
                 this.userName = this.userInput.value;
 
+                this.roomCodeInput.value = ''
+
                 this.log[this.roomCode] = [];
                 this.server[this.roomCode] = new SillyClient();
 
@@ -41,9 +43,6 @@ let myChat = {
                 this.createRoomInfo(this.roomCode);
                 this.connectToRoom();
                
-                    
-                
-                
             }
         });
 
@@ -116,11 +115,13 @@ let myChat = {
         //differentiate types of message
         if(message.type === "text"){
             myChat.appendMessageToBoard(id, message);
+            myChat.log[myChat.roomCode].push(msg);
         }else if(message.type === "history"){
             let log = message.content;
             log.forEach(element => {
-                myChat.appendMessageToBoard(id,element);
-                myChat.log[myChat.roomCode].push(element);
+                let hystoryMessage = JSON.parse(element);
+                myChat.appendMessageToBoard(id,hystoryMessage);
+                myChat.log[myChat.roomCode].push(hystoryMessage);
             });
         }else if(message.type === "private"){
             myChat.appendMessageToBoard(id, message, true);
@@ -150,7 +151,7 @@ let myChat = {
                 myChat.private = false;
             }else{
                 myChat.server[myChat.roomCode].sendMessage(JSON.stringify(msg));
-                myChat.log[this.roomCode].push(msg);
+                myChat.log[myChat.roomCode].push(JSON.stringify(msg));
             }
 
             myChat.appendMessageToBoard(myChat.userID ,msg);
@@ -230,9 +231,12 @@ let myChat = {
         let roomInfoDiv = document.createElement("div");
         roomInfoDiv.className = "room-info";
         roomInfoDiv.innerText = roomCode;
-   
+        
+        //event listener for click on room button
         roomInfoDiv.addEventListener("click",function(){
+            //this refers to the DOM element
             myChat.roomCode = this.innerText;
+            myChat.messageContainer.innerHTML = "";
         });
 
         myChat.navigation.appendChild(roomInfoDiv);
