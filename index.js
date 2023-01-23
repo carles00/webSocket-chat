@@ -1,5 +1,5 @@
 let myChat = {
-    log: [],
+    log: {},
 
     userInput: null,
     roomCodeInput: null,
@@ -11,7 +11,7 @@ let myChat = {
     messageContainer: null,
     navigation: null,
 
-    server: null,
+    server: {},
     userName: null,
     userID: null,
     roomCode: null,
@@ -34,9 +34,16 @@ let myChat = {
                 this.roomCode = this.roomCodeInput.value
                 this.userName = this.userInput.value;
 
+                this.log[this.roomCode] = [];
+                this.server[this.roomCode] = new SillyClient();
+
                 this.chatName.innerText = this.roomCode;
                 this.createRoomInfo(this.roomCode);
                 this.connectToRoom();
+               
+                    
+                
+                
             }
         });
 
@@ -47,17 +54,17 @@ let myChat = {
             }
         });
 
-        this.server = new SillyClient();
+        
     },
 
     connectToRoom: function(){
-        this.server.connect("wss://ecv-etic.upf.edu/node/9000/ws",`U161671CHAT-${this.roomCode}`);
+        this.server[this.roomCode].connect("wss://ecv-etic.upf.edu/node/9000/ws",`U161671CHAT-${this.roomCode}`);
         
         //set sillyserver functions
-        this.server.on_ready = this.onServerReady.bind(this);
-        this.server.on_user_connected = this.onUserConnected.bind(this);
-        this.server.on_user_disconnected = this.onUserDisconnected.bind(this);
-        this.server.on_message = this.onMessage.bind(this);
+        this.server[this.roomCode].on_ready = this.onServerReady.bind(this);
+        this.server[this.roomCode].on_user_connected = this.onUserConnected.bind(this);
+        this.server[this.roomCode].on_user_disconnected = this.onUserDisconnected.bind(this);
+        this.server[this.roomCode].on_message = this.onMessage.bind(this);
 
         let msg = {
            type: "text",
@@ -81,16 +88,16 @@ let myChat = {
         myChat.appendSystemMessageToBoard(msg);
 
         //send log to connected user
-        myChat.server.getRoomInfo( `U161671CHAT-${myChat.roomCode}`, function(room_info) { 
+        myChat.server[myChat.roomCode].getRoomInfo( `U161671CHAT-${myChat.roomCode}`, function(room_info) { 
             let clients = room_info.clients.sort();
             if(clients[0]==myChat.userID){
                 let msg = {
                     type: "history",
-                    content: myChat.log,
+                    content: myChat.log[myChat.roomCode],
                     userName: ""
                 }
 
-                myChat.server.sendMessage(JSON.stringify(msg),[id]);
+                myChat.server[myChat.roomCode].sendMessage(JSON.stringify(msg),[id]);
             }
         });
     },
@@ -111,14 +118,16 @@ let myChat = {
             myChat.appendMessageToBoard(id, message);
         }else if(message.type === "history"){
             let log = message.content;
-            console.log(log);
             log.forEach(element => {
                 myChat.appendMessageToBoard(id,element);
+                myChat.log[myChat.roomCode].push(element);
             });
         }else if(message.type === "private"){
             myChat.appendMessageToBoard(id, message, true);
+        }else if(message.type === "join"){
+            myChat.appendSystemMessageToBoard(message)
         }
-        myChat.log.push(message);
+        
     },
 
     sendMessage: function () {
@@ -137,11 +146,11 @@ let myChat = {
             
             //send message to room 
             if(myChat.private){
-                myChat.server.sendMessage(JSON.stringify(msg),[myChat.sendTo]);
+                myChat.server[myChat.roomCode].sendMessage(JSON.stringify(msg),[myChat.sendTo]);
                 myChat.private = false;
             }else{
-                myChat.server.sendMessage(JSON.stringify(msg));
-                myChat.log.push(msg);
+                myChat.server[myChat.roomCode].sendMessage(JSON.stringify(msg));
+                myChat.log[this.roomCode].push(msg);
             }
 
             myChat.appendMessageToBoard(myChat.userID ,msg);
@@ -220,10 +229,12 @@ let myChat = {
     createRoomInfo: function(roomCode){
         let roomInfoDiv = document.createElement("div");
         roomInfoDiv.className = "room-info";
-        let codeP = document.createElement("p");
-        codeP.className = "room-code-info";
-        codeP.innerText = roomCode;
-        roomInfoDiv.appendChild(codeP);
+        roomInfoDiv.innerText = roomCode;
+   
+        roomInfoDiv.addEventListener("click",function(){
+            myChat.roomCode = this.innerText;
+        });
+
         myChat.navigation.appendChild(roomInfoDiv);
     }
 };
