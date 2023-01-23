@@ -1,9 +1,10 @@
 # WebSocket-chat
-- Author: Carles Gallardo Ramirez
-- Email: carles.gallardo01@estudiant.upf.edu
-- ∫NIA: 218915
+- **Author:** Carles Gallardo Ramirez
+- **Email:** carles.gallardo01@estudiant.upf.edu
+- **NIA:** 218915
 
 Chat using SillyServer web socket library
+
 ## Use:
 
 1. Enter your username on the top-left corner
