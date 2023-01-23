@@ -57,6 +57,7 @@ let myChat = {
     },
 
     connectToRoom: function(){
+        this.messageContainer.innerHTML = '';
         this.server[this.roomCode].connect("wss://ecv-etic.upf.edu/node/9000/ws",`U161671CHAT-${this.roomCode}`);
         
         //set sillyserver functions
@@ -65,12 +66,7 @@ let myChat = {
         this.server[this.roomCode].on_user_disconnected = this.onUserDisconnected.bind(this);
         this.server[this.roomCode].on_message = this.onMessage.bind(this);
 
-        let msg = {
-           type: "text",
-           content: `You have connected to room ${this.roomCode}`,
-           username: ""
-        }
-        myChat.appendSystemMessageToBoard(msg);
+        myChat.appendSystemMessageToBoard(`You have connected to room ${this.roomCode}`);
     },
 
     onServerReady: function(id){
@@ -79,13 +75,8 @@ let myChat = {
 
     onUserConnected: function(id){
         //create system message
-        let msg = {
-            type: "text",
-            content: `${id} connected`,
-            username: ""
-        }
-        myChat.appendSystemMessageToBoard(msg);
-
+        myChat.appendSystemMessageToBoard(`${id} connected`);
+        console.log("hola");
         //send log to connected user
         myChat.server[myChat.roomCode].getRoomInfo( `U161671CHAT-${myChat.roomCode}`, function(room_info) { 
             let clients = room_info.clients.sort();
@@ -102,12 +93,7 @@ let myChat = {
     },
 
     onUserDisconnected: function(id){
-        let msg = {
-            type: "text",
-            content: `${id} disconnected`,
-            username: ""
-        }
-        myChat.appendSystemMessageToBoard(msg);
+        myChat.appendSystemMessageToBoard(`${id} disconnected`);
     },
 
     onMessage: function(id, msg){
@@ -119,14 +105,14 @@ let myChat = {
         }else if(message.type === "history"){
             let log = message.content;
             log.forEach(element => {
-                let hystoryMessage = JSON.parse(element);
+                let hystoryMessage = element;
                 myChat.appendMessageToBoard(id,hystoryMessage);
                 myChat.log[myChat.roomCode].push(hystoryMessage);
             });
         }else if(message.type === "private"){
             myChat.appendMessageToBoard(id, message, true);
         }else if(message.type === "join"){
-            myChat.appendSystemMessageToBoard(message)
+            //myChat.appendSystemMessageToBoard(message)
         }
         
     },
@@ -183,12 +169,7 @@ let myChat = {
                 }
 
                 myChat.sendTo = this.getAttribute("user-id");
-                let privateSys = {
-                    type: "text",
-                    content: sysText,
-                    username: ""
-                }
-                myChat.appendSystemMessageToBoard(privateSys);
+                myChat.appendSystemMessageToBoard(sysText);
             });
 
         }
@@ -211,8 +192,14 @@ let myChat = {
         this.textInput.value = "";
     },
 
-    appendSystemMessageToBoard: function(msg){
+    appendSystemMessageToBoard: function(text){
         //create and append system message
+        let msg = {
+            type: 'text',
+            content: text,
+            username: ''
+        }
+
         let messageDiv = document.createElement("div");
         
         let classString = "message sys-message"
@@ -234,9 +221,16 @@ let myChat = {
         
         //event listener for click on room button
         roomInfoDiv.addEventListener("click",function(){
-            //this refers to the DOM element
+            //here 'this' refers to the DOM element
             myChat.roomCode = this.innerText;
             myChat.messageContainer.innerHTML = "";
+            myChat.appendSystemMessageToBoard(`You have connected to room ${myChat.roomCode}`);
+            let roomMessages = myChat.log[myChat.roomCode];
+            roomMessages.forEach(message =>{
+                myChat.appendMessageToBoard(myChat.userID,JSON.parse(message));
+            });
+            myChat.chatName.text = myChat.roomCode;
+            
         });
 
         myChat.navigation.appendChild(roomInfoDiv);

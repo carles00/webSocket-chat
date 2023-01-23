@@ -124,8 +124,8 @@ html, body{
     background-color: #49CDF5;
     color: black;
 }
-/* Chat Name Zone*/
 
+/* Chat Name Zone*/
 #chat-name-container{
     background-color: #194654;
     padding-left: 10px;
@@ -266,6 +266,5 @@ html, body{
     'GRAD' 0,
     'opsz' 48
 }
-
 
 
