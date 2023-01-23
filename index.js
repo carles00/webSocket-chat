@@ -113,9 +113,7 @@ let myChat = {
             let log = message.content;
             console.log(log);
             log.forEach(element => {
-                if(element.type ==="text"){
-                    myChat.appendMessageToBoard(id,element);
-                }
+                myChat.appendMessageToBoard(id,element);
             });
         }else if(message.type === "private"){
             myChat.appendMessageToBoard(id, message, true);
@@ -136,14 +134,17 @@ let myChat = {
                 content: message,
                 username: myChat.userName
             }
-            myChat.appendMessageToBoard(myChat.userID ,msg);
-            myChat.log.push(msg);
+            
+            //send message to room 
             if(myChat.private){
                 myChat.server.sendMessage(JSON.stringify(msg),[myChat.sendTo]);
                 myChat.private = false;
             }else{
                 myChat.server.sendMessage(JSON.stringify(msg));
+                myChat.log.push(msg);
             }
+
+            myChat.appendMessageToBoard(myChat.userID ,msg);
         }
     },
 
