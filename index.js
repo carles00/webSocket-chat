@@ -76,7 +76,6 @@ let myChat = {
     onUserConnected: function(id){
         //create system message
         myChat.appendSystemMessageToBoard(`${id} connected`);
-        console.log("hola");
         //send log to connected user
         myChat.server[myChat.roomCode].getRoomInfo( `U161671CHAT-${myChat.roomCode}`, function(room_info) { 
             let clients = room_info.clients.sort();
